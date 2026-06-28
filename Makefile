@@ -9,6 +9,12 @@
 #   make clean     remove byte-compiled output
 #   make all       compile + checkdoc + test (the CI gate)
 
+# Sensible defaults (see https://tech.davis-hansson.com/p/make/).
+SHELL := bash
+.SHELLFLAGS := -eu -o pipefail -c
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+
 EMACS ?= emacs
 SRC    = go-ginkgo.el
 TEST   = test/go-ginkgo-test.el
