@@ -100,6 +100,19 @@ All commands are also available via `M-x` and are autoloaded.
 
 ## Development
 
+A [devenv](https://devenv.sh) shell provides Emacs, the `ginkgo` CLI, Go, and
+the toolchain the grammar build needs (git, a C compiler, make):
+
+```sh
+devenv shell     # drop into the dev environment
+devenv test      # run the full CI gate (make all)
+```
+
+With [direnv](https://direnv.net), `direnv allow` loads it automatically on
+`cd`. The included `.envrc` is portable — it only needs `devenv` on `PATH`.
+
+The Makefile targets work in or out of the shell:
+
 ```sh
 make compile     # byte-compile, warnings are errors
 make checkdoc    # doc/style lint

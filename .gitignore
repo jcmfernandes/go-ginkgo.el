@@ -1,3 +1,9 @@
 *.elc
 /dist/
 /.eldev/
+
+# devenv / direnv
+/.devenv/
+/.direnv/
+.devenv.flake.nix
+/devenv.local.nix
