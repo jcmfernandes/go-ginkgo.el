@@ -104,9 +104,12 @@ A [devenv](https://devenv.sh) shell provides Emacs, the `ginkgo` CLI, Go, and
 the toolchain the grammar build needs (git, a C compiler, make):
 
 ```sh
-devenv shell     # drop into the dev environment
-devenv test      # run the full CI gate (make all)
+devenv shell        # drop into the dev environment
+devenv shell -- ci  # grammar + full CI gate (make all), non-interactively
 ```
+
+Inside the shell, `ci` runs the same gate (install the grammar, then `make
+all`). The GitHub `devenv` workflow runs exactly this.
 
 With [direnv](https://direnv.net), `direnv allow` loads it automatically on
 `cd`. The included `.envrc` is portable — it only needs `devenv` on `PATH`.

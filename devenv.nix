@@ -29,8 +29,11 @@
     echo "Run 'make all' for the full CI gate (compile + checkdoc + test)."
   '';
 
-  # `devenv test` runs the same gate as CI.
-  enterTest = ''
+  # Convenience script: build the grammar (if needed) and run the full gate.
+  # Available inside the shell as `ci`, or non-interactively via
+  # `devenv shell -- ci` (this is what the GitHub Action runs).
+  scripts.ci.exec = ''
+    make grammar
     make all
   '';
 }

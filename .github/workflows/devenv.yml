@@ -1,0 +1,32 @@
+name: devenv
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v30
+        with:
+          # Avoid GitHub API rate limits when resolving flake inputs.
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - uses: cachix/cachix-action@v15
+        with:
+          # Public cache of prebuilt devenv binaries (read-only, no auth).
+          name: devenv
+
+      - name: Install devenv
+        run: nix profile install nixpkgs#devenv
+
+      - name: Run the CI gate in the devenv shell
+        # `ci` is the script defined in devenv.nix: install the Go tree-sitter
+        # grammar, then `make all` (compile + checkdoc + test) against the
+        # pinned toolchain.
+        run: devenv shell -- ci
