@@ -7,7 +7,7 @@
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: languages, tools, go, testing
-;; URL: https://github.com/jcmfernandes/go-ginkgo
+;; URL: https://github.com/jcmfernandes/go-ginkgo.el
 
 ;; This file is not part of GNU Emacs.
 
@@ -75,7 +75,7 @@
   "Run Ginkgo BDD specs from Go buffers."
   :group 'tools
   :prefix "go-ginkgo-"
-  :link '(url-link :tag "Homepage" "https://github.com/jcmfernandes/go-ginkgo"))
+  :link '(url-link :tag "Homepage" "https://github.com/jcmfernandes/go-ginkgo.el"))
 
 ;;;; Options
 

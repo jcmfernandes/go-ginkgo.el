@@ -43,7 +43,7 @@ With `use-package` + a recent Emacs (`:vc`):
 
 ```elisp
 (use-package go-ginkgo
-  :vc (:url "https://github.com/jcmfernandes/go-ginkgo")
+  :vc (:url "https://github.com/jcmfernandes/go-ginkgo.el")
   :hook (go-ts-mode . go-ginkgo-mode)
   :custom (go-ginkgo-keymap-prefix "C-c G"))
 ```
@@ -52,7 +52,7 @@ With `straight.el`:
 
 ```elisp
 (use-package go-ginkgo
-  :straight (:host github :repo "jcmfernandes/go-ginkgo")
+  :straight (:host github :repo "jcmfernandes/go-ginkgo.el")
   :hook (go-ts-mode . go-ginkgo-mode)
   :init (setq go-ginkgo-keymap-prefix "C-c G"))
 ```
