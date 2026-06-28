@@ -11,27 +11,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        emacs-version:
-          - '29.1'
-          - '29.4'
-          - '30.1'
-          - snapshot
+        # Emacs build is selected in devenv.nix via $EMACS_PKG:
+        #   emacs29   -> 29.4   (pinned nixos-24.05; the declared floor)
+        #   emacs30   -> 30.x   (current stable)
+        #   emacs-git -> master snapshot (next release)
+        emacs:
+          - emacs29
+          - emacs30
+          - emacs-git
     steps:
       - uses: actions/checkout@v4
 
-      - uses: purcell/setup-emacs@master
+      - uses: cachix/install-nix-action@v30
         with:
-          version: ${{ matrix.emacs-version }}
+          # Avoid GitHub API rate limits when resolving flake inputs.
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - name: Byte-compile (warnings are errors)
-        run: make compile
+      - uses: cachix/cachix-action@v15
+        with:
+          # devenv: prebuilt devenv binaries. nix-community: prebuilt Emacs
+          # from the emacs-overlay (notably the emacs-git snapshot).
+          name: devenv
+          extraPullNames: nix-community
 
-      - name: Checkdoc
-        run: make checkdoc
+      - name: Install devenv
+        run: nix profile install nixpkgs#devenv
 
-      - name: Install Go tree-sitter grammar
-        # Best-effort: the tree-sitter tests skip themselves if this fails.
-        run: make grammar || true
-
-      - name: Run tests
-        run: make test
+      - name: Run the CI gate in the devenv shell
+        env:
+          EMACS_PKG: ${{ matrix.emacs }}
+        # `ci` (defined in devenv.nix): install the Go tree-sitter grammar,
+        # then `make all` (compile + checkdoc + test) with the matrix Emacs.
+        run: devenv shell -- ci

@@ -1,10 +1,28 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
+let
+  system = pkgs.stdenv.system;
+
+  # Emacs 29.x lives only in the pinned older nixpkgs (see devenv.yaml).
+  pkgs29 = import inputs.nixpkgs-29 { inherit system; };
+
+  # The CI matrix sets $EMACS_PKG to one of these keys to test across versions.
+  # Unset (local dev) -> current stable. -nox builds keep the closures small
+  # and X-free, which is all the batch test suite needs.
+  emacsByKey = {
+    emacs29 = pkgs29.emacs-nox;       # 29.4  (pinned nixos-24.05)
+    emacs30 = pkgs."emacs30-nox";     # 30.x  (rolling nixpkgs / emacs-overlay)
+    emacs-git = pkgs.emacs-git;       # master snapshot (emacs-overlay)
+  };
+  key = let v = builtins.getEnv "EMACS_PKG"; in if v == "" then "emacs30" else v;
+  emacs = emacsByKey.${key} or
+    (throw "EMACS_PKG=${key} must be one of: ${toString (builtins.attrNames emacsByKey)}");
+in
 {
   # Tooling needed to develop and test go-ginkgo.el.
   packages = [
     # Emacs runs the package and the ERT suite (`make compile|checkdoc|test`).
-    pkgs.emacs
+    emacs
 
     # The `ginkgo' CLI is what the package actually drives.
     pkgs.ginkgo
@@ -33,6 +51,7 @@
   # Available inside the shell as `ci`, or non-interactively via
   # `devenv shell -- ci` (this is what the GitHub Action runs).
   scripts.ci.exec = ''
+    set -euo pipefail
     make grammar
     make all
   '';

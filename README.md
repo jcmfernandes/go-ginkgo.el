@@ -109,7 +109,14 @@ devenv shell -- ci  # grammar + full CI gate (make all), non-interactively
 ```
 
 Inside the shell, `ci` runs the same gate (install the grammar, then `make
-all`). The GitHub `devenv` workflow runs exactly this.
+all`). CI runs exactly this across an Emacs matrix, selecting the build with
+`$EMACS_PKG`:
+
+```sh
+EMACS_PKG=emacs29   devenv shell -- ci   # 29.4 (pinned nixos-24.05; the floor)
+EMACS_PKG=emacs30   devenv shell -- ci   # 30.x (current stable; the default)
+EMACS_PKG=emacs-git devenv shell -- ci   # master snapshot (next release)
+```
 
 With [direnv](https://direnv.net), `direnv allow` loads it automatically on
 `cd`. The included `.envrc` is portable — it only needs `devenv` on `PATH`.
@@ -124,18 +131,20 @@ make test        # run the ERT suite
 make all         # the full CI gate
 ```
 
-`make grammar` installs the Go grammar into a project-local `.tree-sitter/`
-directory (not your `~/.emacs.d`), and `make test` looks there automatically —
-so the tree-sitter tests just work after one `make grammar`. Tests skip
-themselves when the grammar is unavailable, so the non-grammar tests run
-anywhere.
+`make grammar` installs the Go grammar into a project-local `.emacs.d/`
+directory (not your real `~/.emacs.d`), and `make test` looks there
+automatically — so the tree-sitter tests just work after one `make grammar`.
+Tests skip themselves when the grammar is unavailable, so the non-grammar
+tests run anywhere. The grammar is pinned to an ABI-14 tag (`GRAMMAR_REV`) so
+it loads on Emacs 29 as well as 30/31 — master is ABI 15, which Emacs 29
+cannot load.
 
-Override `GRAMMAR_DIR` to install elsewhere (e.g. your shared
-`~/.emacs.d/tree-sitter`), or point `make test` at a grammar you installed
-some other way with `TREESIT_EXTRA`:
+Override `EMACS_HOME` to install elsewhere (e.g. your shared `~/.emacs.d`), or
+point `make test` at a grammar you installed some other way with
+`TREESIT_EXTRA`:
 
 ```sh
-make grammar GRAMMAR_DIR=~/.emacs.d/tree-sitter
+make grammar EMACS_HOME=~/.emacs.d
 make test    TREESIT_EXTRA=/path/to/dir/with/libtree-sitter-go.so
 ```
 

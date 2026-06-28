@@ -1,3 +1,14 @@
 inputs:
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+  # Emacs 29.x is gone from rolling nixpkgs and the emacs-overlay; pin an older
+  # nixpkgs that still ships it (NixOS 24.05 -> Emacs 29.4) to keep CI coverage
+  # of the package's declared floor (emacs "29.1").
+  nixpkgs-29:
+    url: github:NixOS/nixpkgs/nixos-24.05
+  # Provides the bleeding-edge build (pkgs.emacs-git). Prebuilt binaries come
+  # from the nix-community cache.
+  emacs-overlay:
+    url: github:nix-community/emacs-overlay
+    overlays:
+      - default
