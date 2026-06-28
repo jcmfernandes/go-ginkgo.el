@@ -1,6 +1,7 @@
 *.elc
 /dist/
 /.eldev/
+/.tree-sitter/
 
 # devenv / direnv
 /.devenv/

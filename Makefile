@@ -4,8 +4,9 @@
 #   make compile   byte-compile (warnings are errors)
 #   make test      run the ERT suite
 #   make checkdoc  documentation/style lint
-#   make grammar   install the Go tree-sitter grammar (needed for the
-#                  tree-sitter tests; requires git and a C compiler)
+#   make grammar   install the Go tree-sitter grammar into GRAMMAR_DIR
+#                  (project-local by default; needed for the tree-sitter
+#                  tests; requires git and a C compiler)
 #   make clean     remove byte-compiled output
 #   make all       compile + checkdoc + test (the CI gate)
 
@@ -19,10 +20,17 @@ EMACS ?= emacs
 SRC    = go-ginkgo.el
 TEST   = test/go-ginkgo-test.el
 
-# Allow CI / local runs to point at an existing grammar directory, e.g.
+# Where `make grammar' installs the Go grammar, and where `make test' looks for
+# it.  Defaults to a project-local directory so it neither writes to nor depends
+# on your ~/.emacs.d.  Override to install/use it elsewhere, e.g.
+#   make grammar GRAMMAR_DIR=~/.emacs.d/tree-sitter
+GRAMMAR_DIR ?= $(CURDIR)/.tree-sitter
+
+# Additionally point `make test' at a grammar you installed elsewhere, e.g.
 #   make test TREESIT_EXTRA=/path/to/tree-sitter
 TREESIT_EXTRA ?=
-EXTRA_LOAD := $(if $(TREESIT_EXTRA),--eval "(add-to-list 'treesit-extra-load-path \"$(TREESIT_EXTRA)\")",)
+EXTRA_LOAD := --eval "(add-to-list 'treesit-extra-load-path \"$(GRAMMAR_DIR)\")" \
+              $(if $(TREESIT_EXTRA),--eval "(add-to-list 'treesit-extra-load-path \"$(TREESIT_EXTRA)\")",)
 
 .PHONY: all compile test checkdoc grammar clean
 
@@ -47,7 +55,7 @@ grammar:
 	    (require 'treesit) \
 	    (setq treesit-language-source-alist \
 	      '((go \"https://github.com/tree-sitter/tree-sitter-go\"))) \
-	    (treesit-install-language-grammar 'go))"
+	    (treesit-install-language-grammar 'go \"$(GRAMMAR_DIR)\"))"
 
 clean:
 	rm -f $(SRC:.el=.elc) test/*.elc

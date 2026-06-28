@@ -121,12 +121,19 @@ make test        # run the ERT suite
 make all         # the full CI gate
 ```
 
-Tree-sitter tests skip themselves when the Go grammar is unavailable, so the
-non-grammar tests run anywhere. To run them against a grammar you already have
-installed elsewhere:
+`make grammar` installs the Go grammar into a project-local `.tree-sitter/`
+directory (not your `~/.emacs.d`), and `make test` looks there automatically —
+so the tree-sitter tests just work after one `make grammar`. Tests skip
+themselves when the grammar is unavailable, so the non-grammar tests run
+anywhere.
+
+Override `GRAMMAR_DIR` to install elsewhere (e.g. your shared
+`~/.emacs.d/tree-sitter`), or point `make test` at a grammar you installed
+some other way with `TREESIT_EXTRA`:
 
 ```sh
-make test TREESIT_EXTRA=/path/to/dir/with/libtree-sitter-go.so
+make grammar GRAMMAR_DIR=~/.emacs.d/tree-sitter
+make test    TREESIT_EXTRA=/path/to/dir/with/libtree-sitter-go.so
 ```
 
 ## License
