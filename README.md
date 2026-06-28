@@ -113,9 +113,8 @@ all`). CI runs exactly this across an Emacs matrix, selecting the build with
 `$EMACS_PKG`:
 
 ```sh
-EMACS_PKG=emacs29   devenv shell -- ci   # 29.4 (pinned nixos-24.05; the floor)
-EMACS_PKG=emacs30   devenv shell -- ci   # 30.x (current stable; the default)
-EMACS_PKG=emacs-git devenv shell -- ci   # master snapshot (next release)
+EMACS_PKG=emacs29 devenv shell -- ci   # 29.4 (pinned nixos-24.05; the floor)
+EMACS_PKG=emacs30 devenv shell -- ci   # 30.x (current stable; the default)
 ```
 
 With [direnv](https://direnv.net), `direnv allow` loads it automatically on

@@ -12,13 +12,11 @@ jobs:
       fail-fast: false
       matrix:
         # Emacs build is selected in devenv.nix via $EMACS_PKG:
-        #   emacs29   -> 29.4   (pinned nixos-24.05; the declared floor)
-        #   emacs30   -> 30.x   (current stable)
-        #   emacs-git -> master snapshot (next release)
+        #   emacs29 -> 29.4 (pinned nixos-24.05; the declared floor)
+        #   emacs30 -> 30.x (current stable)
         emacs:
           - emacs29
           - emacs30
-          - emacs-git
     steps:
       - uses: actions/checkout@v4
 
@@ -30,10 +28,8 @@ jobs:
 
       - uses: cachix/cachix-action@v15
         with:
-          # devenv: prebuilt devenv binaries. nix-community: prebuilt Emacs
-          # from the emacs-overlay (notably the emacs-git snapshot).
+          # Public cache of prebuilt devenv binaries (read-only, no auth).
           name: devenv
-          extraPullNames: nix-community
 
       - name: Install devenv
         run: nix profile install nixpkgs#devenv

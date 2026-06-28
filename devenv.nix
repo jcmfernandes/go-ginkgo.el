@@ -11,8 +11,7 @@ let
   # and X-free, which is all the batch test suite needs.
   emacsByKey = {
     emacs29 = pkgs29.emacs-nox;       # 29.4  (pinned nixos-24.05)
-    emacs30 = pkgs."emacs30-nox";     # 30.x  (rolling nixpkgs / emacs-overlay)
-    emacs-git = pkgs.emacs-git;       # master snapshot (emacs-overlay)
+    emacs30 = pkgs.emacs-nox;         # 30.x  (rolling nixpkgs)
   };
   key = let v = builtins.getEnv "EMACS_PKG"; in if v == "" then "emacs30" else v;
   emacs = emacsByKey.${key} or
