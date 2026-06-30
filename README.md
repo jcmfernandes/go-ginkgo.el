@@ -104,17 +104,17 @@ A [devenv](https://devenv.sh) shell provides Emacs, the `ginkgo` CLI, Go, and
 the toolchain the grammar build needs (git, a C compiler, make):
 
 ```sh
-devenv shell        # drop into the dev environment
-devenv shell -- ci  # grammar + full CI gate (make all), non-interactively
+devenv shell                      # drop into the dev environment
+devenv shell -- make grammar all  # grammar + full CI gate, non-interactively
 ```
 
-Inside the shell, `ci` runs the same gate (install the grammar, then `make
-all`). CI runs exactly this across an Emacs matrix, selecting the build with
-`$EMACS_PKG`:
+Inside the shell, the Makefile drives the gate: install the grammar, then
+`make all` (compile + checkdoc + test). CI runs the same targets across an
+Emacs matrix, selecting the build with `$EMACS_PKG`:
 
 ```sh
-EMACS_PKG=emacs29 devenv shell -- ci   # 29.4 (pinned nixos-24.05; the floor)
-EMACS_PKG=emacs30 devenv shell -- ci   # 30.x (current stable; the default)
+EMACS_PKG=emacs29 devenv shell -- make grammar all   # 29.4 (pinned nixos-24.05; the floor)
+EMACS_PKG=emacs30 devenv shell -- make grammar all   # 30.x (current stable; the default)
 ```
 
 With [direnv](https://direnv.net), `direnv allow` loads it automatically on

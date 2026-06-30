@@ -37,6 +37,14 @@ jobs:
       - name: Run the CI gate in the devenv shell
         env:
           EMACS_PKG: ${{ matrix.emacs }}
-        # `ci` (defined in devenv.nix): install the Go tree-sitter grammar,
-        # then `make all` (compile + checkdoc + test) with the matrix Emacs.
-        run: devenv shell -- ci
+        # Run each phase of the gate (install the Go tree-sitter grammar, then
+        # compile + checkdoc + test) inside the devenv shell with the matrix
+        # Emacs.  Each phase is wrapped in a GitHub Actions log group so the
+        # test results read like a separate step.
+        run: |
+          devenv shell -- bash -euo pipefail -c '
+            echo "::group::Install the Go tree-sitter grammar" ; make grammar  ; echo "::endgroup::"
+            echo "::group::Byte-compile"                        ; make compile  ; echo "::endgroup::"
+            echo "::group::Checkdoc"                            ; make checkdoc ; echo "::endgroup::"
+            echo "::group::Run the ERT test suite"              ; make test     ; echo "::endgroup::"
+          '

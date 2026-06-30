@@ -45,13 +45,4 @@ in
     echo
     echo "Run 'make all' for the full CI gate (compile + checkdoc + test)."
   '';
-
-  # Convenience script: build the grammar (if needed) and run the full gate.
-  # Available inside the shell as `ci`, or non-interactively via
-  # `devenv shell -- ci` (this is what the GitHub Action runs).
-  scripts.ci.exec = ''
-    set -euo pipefail
-    make grammar
-    make all
-  '';
 }
