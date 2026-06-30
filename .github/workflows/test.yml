@@ -36,7 +36,7 @@ jobs:
 
       - name: "Install devenv"
         run: |
-          nix profile install nixpkgs#devenv
+          nix profile add nixpkgs#devenv
 
       - uses: "HatsuneMiku3939/direnv-action@5fe57fa0cfa35641b8dcbb724b39b613f32080d7" # v1.3.7
 
