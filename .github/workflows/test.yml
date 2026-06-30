@@ -2,12 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     strategy:
       fail-fast: false
       matrix:
@@ -15,26 +15,27 @@ jobs:
         #   emacs29 -> 29.4 (pinned nixos-24.05; the declared floor)
         #   emacs30 -> 30.x (current stable)
         emacs:
-          - emacs29
-          - emacs30
+          - "emacs29"
+          - "emacs30"
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
 
-      - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+      - uses: "cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3" # v31.10.6
         with:
           # Avoid GitHub API rate limits when resolving flake inputs.
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
+      - uses: "cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71" # v17
         with:
           # Public cache of prebuilt devenv binaries (read-only, no auth).
-          name: devenv
+          name: "devenv"
 
-      - name: Install devenv
-        run: nix profile install nixpkgs#devenv
+      - name: "Install devenv"
+        run: |
+          nix profile install nixpkgs#devenv
 
-      - name: Run the CI gate in the devenv shell
+      - name: "Run the CI gate in the devenv shell"
         env:
           EMACS_PKG: ${{ matrix.emacs }}
         # Run each phase of the gate (install the Go tree-sitter grammar, then
