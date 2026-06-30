@@ -1,5 +1,7 @@
 # go-ginkgo
 
+[![Tests](https://github.com/jcmfernandes/go-ginkgo.el/actions/workflows/test.yml/badge.svg)](https://github.com/jcmfernandes/go-ginkgo.el/actions/workflows/test.yml)
+
 Run [Ginkgo](https://onsi.github.io/ginkgo/) (BDD) specs straight from a Go
 buffer in Emacs. `go-ginkgo` drives the `ginkgo` CLI through `compilation-mode`
 and is **tree-sitter native**: it finds the spec at point by walking the Go
