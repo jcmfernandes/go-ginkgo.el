@@ -226,6 +226,18 @@ var _ = Describe(\"Widget\", func() {
     (should (eq (keymap-lookup go-ginkgo-mode-map "C-c j")
                 'go-ginkgo-command-map))))
 
+;;;; Parser guard
+
+(ert-deftest go-ginkgo-test-ensure-parser-requires-go-parser ()
+  "`go-ginkgo--ensure-parser' rejects a buffer whose only parser isn't Go."
+  ;; Stand in for a buffer that has some tree-sitter parser, just not a Go one
+  ;; (e.g. a non-Go major mode).  The stub honours the LANGUAGE filter the way
+  ;; the real `treesit-parser-list' does, so a Go query comes back empty.
+  (cl-letf (((symbol-function 'treesit-parser-list)
+             (lambda (&optional _buffer language &rest _)
+               (unless (eq language 'go) (list 'fake-parser)))))
+    (should-error (go-ginkgo--ensure-parser) :type 'user-error)))
+
 ;;;; Tree-sitter: description, ancestry, focus
 
 (ert-deftest go-ginkgo-test-ts-innermost-description ()

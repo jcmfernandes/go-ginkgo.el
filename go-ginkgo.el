@@ -172,9 +172,9 @@ CALL is a tree-sitter `call_expression' node."
       (substring txt 1 (1- (length txt))))))
 
 (defun go-ginkgo--ensure-parser ()
-  "Signal a `user-error' unless the current buffer has a tree-sitter parser."
-  (unless (treesit-parser-list)
-    (user-error "No tree-sitter parser here (visit the file in go-ts-mode)")))
+  "Signal a `user-error' unless the current buffer has a Go tree-sitter parser."
+  (unless (treesit-parser-list nil 'go)
+    (user-error "No Go tree-sitter parser here (visit the file in go-ts-mode)")))
 
 (defun go-ginkgo--ancestry ()
   "Return the descriptions of the Ginkgo containers enclosing point.
