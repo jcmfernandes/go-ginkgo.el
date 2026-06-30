@@ -238,6 +238,15 @@ var _ = Describe(\"Widget\", func() {
                (unless (eq language 'go) (list 'fake-parser)))))
     (should-error (go-ginkgo--ensure-parser) :type 'user-error)))
 
+(ert-deftest go-ginkgo-test-ensure-parser-without-treesit-support ()
+  "`go-ginkgo--ensure-parser' errors cleanly when Emacs lacks tree-sitter.
+On such a build `treesit-available-p' is nil and the parser primitives are
+unusable; the guard must short-circuit to a `user-error' before calling them."
+  (cl-letf (((symbol-function 'treesit-available-p) (lambda () nil))
+            ((symbol-function 'treesit-parser-list)
+             (lambda (&rest _) (error "tree-sitter library not available"))))
+    (should-error (go-ginkgo--ensure-parser) :type 'user-error)))
+
 ;;;; Tree-sitter: description, ancestry, focus
 
 (ert-deftest go-ginkgo-test-ts-innermost-description ()
