@@ -38,7 +38,7 @@ jobs:
         run: |
           nix profile add nixpkgs#devenv
 
-      - uses: "HatsuneMiku3939/direnv-action@5fe57fa0cfa35641b8dcbb724b39b613f32080d7" # v1.3.7
+      - uses: "HatsuneMiku3939/direnv-action@baf32ecc0661658d4c46010e79cc37bdfe858e8e" # v1.4.0
 
       - name: "Run the CI gate in the devenv shell"
         env:
