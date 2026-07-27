@@ -177,7 +177,11 @@ Also errors cleanly when Emacs was built without tree-sitter support, rather
 than letting the parser primitives fail with an opaque error."
   (unless (treesit-available-p)
     (user-error "This Emacs was built without tree-sitter support"))
-  (unless (treesit-parser-list nil 'go)
+  ;; Filter the parser list by hand rather than passing `treesit-parser-list' a
+  ;; LANGUAGE argument: that argument only exists on Emacs 30+, and we support
+  ;; 29.1.
+  (unless (seq-find (lambda (parser) (eq (treesit-parser-language parser) 'go))
+                    (treesit-parser-list))
     (user-error "No Go tree-sitter parser here (visit the file in go-ts-mode)")))
 
 (defun go-ginkgo--ancestry ()
