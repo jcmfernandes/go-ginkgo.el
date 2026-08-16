@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
 
-      - uses: "cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342" # v31.11.0
+      - uses: "cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24" # v31.11.1
         with:
           # Avoid GitHub API rate limits when resolving flake inputs.
           extra_nix_config: |
@@ -38,7 +38,7 @@ jobs:
         run: |
           nix profile add nixpkgs#devenv
 
-      - uses: "HatsuneMiku3939/direnv-action@c4ead5d491ceb812400ab06425db5c27dbd73022" # v1.4.2
+      - uses: "HatsuneMiku3939/direnv-action@6204df45a0179b54cdc2b51b22ac93d728ca6e4d" # v1.4.5
 
       - name: "Run the CI gate in the devenv shell"
         env:
